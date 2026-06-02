@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weekly Drop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">WEEKLY<span class="accent">DROP</span></span>
+      </div>
+      <nav>
+        <a href="#posts">Posts</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-text">GG</div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">SEASON 2025 · WEEK <span id="week-num">--</span></p>
+      <h1 class="hero-title">THE<br/><span class="accent">WEEKLY</span><br/>DROP</h1>
+      <p class="hero-sub">Your go-to gaming &amp; esports digest — every week, no fluff.</p>
+      <a href="#posts" class="cta-btn">READ THIS WEEK ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" id="post-count">0</span><span class="stat-label">Posts</span></div>
+      <div class="stat"><span class="stat-num">52</span><span class="stat-label">Weeks/Year</span></div>
+      <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Games Covered</span></div>
+    </div>
+  </section>
+
+  <!-- POSTS SECTION -->
+  <section id="posts" class="posts-section">
+    <div class="section-header">
+      <h2>RECENT <span class="accent">POSTS</span></h2>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-tag="all">All</button>
+        <button class="filter-btn" data-tag="fps">FPS</button>
+        <button class="filter-btn" data-tag="moba">MOBA</button>
+        <button class="filter-btn" data-tag="news">News</button>
+        <button class="filter-btn" data-tag="tournaments">Tournaments</button>
+      </div>
+    </div>
+    <div class="posts-grid" id="posts-grid"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about-section">
+    <div class="about-inner">
+      <h2>ABOUT <span class="accent">THIS PAGE</span></h2>
+      <p>Every week we drop the biggest gaming and esports highlights straight from our community. No ads, no fluff — just the games we love.</p>
+      <p>Originally posted in our Discord, now archived here for everyone.</p>
+    </div>
+  </section>
+
+  <!-- ADD POST MODAL TRIGGER (for you as the owner) -->
+  <button class="fab" id="add-btn" title="Add new post">+</button>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h3>NEW <span class="accent">POST</span></h3>
+      <input type="text" id="m-title" placeholder="Post title" />
+      <textarea id="m-body" placeholder="What happened this week..."></textarea>
+      <select id="m-tag">
+        <option value="news">News</option>
+        <option value="fps">FPS</option>
+        <option value="moba">MOBA</option>
+        <option value="tournaments">Tournaments</option>
+      </select>
+      <div class="modal-actions">
+        <button class="cta-btn" id="save-btn">PUBLISH</button>
+        <button class="cancel-btn" id="cancel-btn">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>WEEKLY DROP &copy; <span id="year"></span></span>
+    <span>Built with GitHub Pages</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
