@@ -1,168 +1,127 @@
-// ── WEEKLY DROP · app.js ────────────────────────────────
+// ── WARFRAME WEEKLY · app.js ─────────────────────────
 
-// Storage key
-const STORAGE_KEY = 'weeklyDrop_posts';
+const STORAGE_KEY = 'warframeWeekly_entries';
 
-// ── Helpers ─────────────────────────────────────────────
+const SECTIONS = [
+  { id: 'steelpath',    gridId: 'steelpath-grid',    label: "Teshin's Steelpath Shop" },
+  { id: 'incarnons',   gridId: 'incarnons-grid',    label: 'Circuit Incarnons' },
+  { id: 'warframes',   gridId: 'warframes-grid',    label: 'Circuit Warframes' },
+  { id: 'archon-shard',gridId: 'archon-shard-grid', label: 'Bird 3 Archon Shard' },
+  { id: 'archon-hunt', gridId: 'archon-hunt-grid',  label: 'Archon Hunt' },
+  { id: 'expensive',   gridId: 'expensive-grid',    label: 'Expensive Warframe Sets' },
+  { id: 'cheapest',    gridId: 'cheapest-grid',     label: 'Cheapest Warframe Sets' },
+];
+
 function getWeekNumber() {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 1);
   return Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
 }
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric'
-  });
+function loadEntries() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
 }
 
-function loadPosts() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch { return []; }
+function saveEntries(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function savePosts(posts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── State ────────────────────────────────────────────────
-let posts = loadPosts();
-let activeTag = 'all';
+let data = loadEntries();
 
-// ── Seed sample posts if empty ───────────────────────────
-if (posts.length === 0) {
-  posts = [
-    {
-      id: Date.now() - 3,
-      title: "Team Liquid Takes the Grand Final",
-      body: "An incredible series — Liquid came back from 0-2 down to claim the championship trophy in one of the most intense Bo5 matches this season. The crowd went absolutely wild.",
-      tag: "tournaments",
-      week: getWeekNumber(),
-      date: new Date().toISOString()
-    },
-    {
-      id: Date.now() - 2,
-      title: "Patch 14.12 Meta Breakdown",
-      body: "The new patch shakes up the FPS meta hard. Riflers are finally back in favour after the SMG-heavy weeks, and several agents got significant movement adjustments.",
-      tag: "fps",
-      week: getWeekNumber(),
-      date: new Date().toISOString()
-    },
-    {
-      id: Date.now() - 1,
-      title: "Worlds Bracket Stage Announced",
-      body: "The bracket for the MOBA World Championship has dropped. Group A looks like a bloodbath with three top-5 ranked teams fighting for two spots. Who's making it through?",
-      tag: "moba",
-      week: getWeekNumber(),
-      date: new Date().toISOString()
+// ── Render all sections ──────────────────────────────
+function renderAll() {
+  SECTIONS.forEach(sec => {
+    const grid = document.getElementById(sec.gridId);
+    if (!grid) return;
+    const items = data[sec.id] || [];
+
+    if (items.length === 0) {
+      grid.innerHTML = `<div class="empty-state">No entries yet — hit + to add this week's info.</div>`;
+      return;
     }
-  ];
-  savePosts(posts);
-}
 
-// ── Render ───────────────────────────────────────────────
-function renderPosts() {
-  const grid = document.getElementById('posts-grid');
-  const filtered = activeTag === 'all' ? posts : posts.filter(p => p.tag === activeTag);
-
-  // Update stat count
-  document.getElementById('post-count').textContent = posts.length;
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty-state">NO POSTS YET — HIT + TO ADD ONE</div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered
-    .slice()
-    .reverse()
-    .map(p => `
-      <div class="post-card" data-id="${p.id}">
-        <span class="post-tag ${p.tag}">${p.tag.toUpperCase()}</span>
-        <h3 class="post-title">${escapeHTML(p.title)}</h3>
-        <p class="post-body">${escapeHTML(p.body)}</p>
+    grid.innerHTML = items.map(item => `
+      <div class="post-card">
+        <h3 class="post-title">${escapeHTML(item.title)}</h3>
+        ${item.price ? `<div class="price-tag">◈ ${escapeHTML(item.price)} pt</div>` : ''}
+        ${item.notes ? `<p class="post-body">${escapeHTML(item.notes)}</p>` : ''}
         <div class="post-meta">
-          <span>${formatDate(p.date)}</span>
-          <span class="post-week">WEEK ${p.week}</span>
-          <button class="delete-btn" data-id="${p.id}" title="Delete">✕</button>
+          <span class="post-week">WEEK ${item.week}</span>
+          <button class="delete-btn" data-section="${sec.id}" data-id="${item.id}">✕</button>
         </div>
       </div>
     `).join('');
 
-  // Delete buttons
-  grid.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = Number(btn.dataset.id);
-      posts = posts.filter(p => p.id !== id);
-      savePosts(posts);
-      renderPosts();
+    grid.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sid = btn.dataset.section;
+        const id  = Number(btn.dataset.id);
+        data[sid] = (data[sid] || []).filter(e => e.id !== id);
+        saveEntries(data);
+        renderAll();
+      });
     });
   });
 }
 
-function escapeHTML(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-// ── Filter ───────────────────────────────────────────────
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeTag = btn.dataset.tag;
-    renderPosts();
-  });
-});
-
-// ── Modal ────────────────────────────────────────────────
-const modal   = document.getElementById('modal');
-const addBtn  = document.getElementById('add-btn');
-const saveBtn = document.getElementById('save-btn');
+// ── Modal ────────────────────────────────────────────
+const modal     = document.getElementById('modal');
+const addBtn    = document.getElementById('add-btn');
+const saveBtn   = document.getElementById('save-btn');
 const cancelBtn = document.getElementById('cancel-btn');
 
 addBtn.addEventListener('click', () => modal.classList.add('open'));
 cancelBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
 function closeModal() {
   modal.classList.remove('open');
   document.getElementById('m-title').value = '';
-  document.getElementById('m-body').value = '';
+  document.getElementById('m-price').value = '';
+  document.getElementById('m-body').value  = '';
 }
 
 saveBtn.addEventListener('click', () => {
-  const title = document.getElementById('m-title').value.trim();
-  const body  = document.getElementById('m-body').value.trim();
-  const tag   = document.getElementById('m-tag').value;
+  const section = document.getElementById('m-section').value;
+  const title   = document.getElementById('m-title').value.trim();
+  const price   = document.getElementById('m-price').value.trim();
+  const notes   = document.getElementById('m-body').value.trim();
 
-  if (!title || !body) {
-    document.getElementById(title ? 'm-body' : 'm-title').style.borderColor = '#ff2d55';
-    setTimeout(() => {
-      document.getElementById('m-title').style.borderColor = '';
-      document.getElementById('m-body').style.borderColor = '';
-    }, 1500);
+  if (!title) {
+    document.getElementById('m-title').style.borderColor = '#ff2d55';
+    setTimeout(() => document.getElementById('m-title').style.borderColor = '', 1500);
     return;
   }
 
-  posts.push({
-    id: Date.now(),
-    title, body, tag,
-    week: getWeekNumber(),
-    date: new Date().toISOString()
-  });
-
-  savePosts(posts);
+  if (!data[section]) data[section] = [];
+  data[section].push({ id: Date.now(), title, price, notes, week: getWeekNumber() });
+  saveEntries(data);
   closeModal();
-  renderPosts();
+  renderAll();
+
+  // Scroll to the section
+  document.getElementById(section === 'expensive' ? 'expensive-sets' : section === 'cheapest' ? 'cheapest-sets' : section)
+    ?.scrollIntoView({ behavior: 'smooth' });
 });
 
-// ── Init ─────────────────────────────────────────────────
-document.getElementById('week-num').textContent = getWeekNumber();
-document.getElementById('year').textContent = new Date().getFullYear();
-renderPosts();
+// ── Hamburger ────────────────────────────────────────
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('main-nav').classList.toggle('open');
+});
+
+document.querySelectorAll('#main-nav a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('main-nav').classList.remove('open'));
+});
+
+// ── Init ─────────────────────────────────────────────
+document.getElementById('week-num').textContent  = getWeekNumber();
+document.getElementById('year').textContent      = new Date().getFullYear();
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+renderAll();

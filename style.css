@@ -74,17 +74,44 @@ header {
 
 .logo-icon { font-size: 1.3rem; }
 
-nav { display: flex; gap: 2rem; }
+nav { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: flex-end; }
 nav a {
   color: var(--muted);
   text-decoration: none;
   font-family: var(--font-cond);
-  font-size: 0.9rem;
-  letter-spacing: 2px;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 nav a:hover { color: var(--accent); }
+
+.hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.2rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .hamburger { display: block; }
+  #main-nav {
+    display: none;
+    position: absolute;
+    top: 60px; left: 0; right: 0;
+    background: rgba(10,10,15,0.97);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: 1rem 2rem;
+    gap: 1rem;
+  }
+  #main-nav.open { display: flex; }
+  nav a { font-size: 0.9rem; }
+}
 
 /* ── HERO ───────────────────────────────────────────── */
 .hero {
@@ -180,11 +207,32 @@ nav a:hover { color: var(--accent); }
   text-transform: uppercase;
 }
 
-/* ── POSTS SECTION ──────────────────────────────────── */
-.posts-section {
+/* ── CONTENT SECTIONS ───────────────────────────────── */
+.content-section {
   max-width: 1200px;
   margin: 0 auto;
   padding: 5rem 2rem;
+}
+
+.alt-bg {
+  background: var(--bg2);
+  max-width: 100%;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.alt-bg .section-header,
+.alt-bg .card-grid {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 .section-header {
@@ -223,12 +271,7 @@ nav a:hover { color: var(--accent); }
   background: rgba(0,255,224,0.05);
 }
 
-/* ── POSTS GRID ─────────────────────────────────────── */
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
+/* card-grid defined above */
 
 .post-card {
   background: var(--card-bg);
@@ -287,6 +330,15 @@ nav a:hover { color: var(--accent); }
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.price-tag {
+  font-family: var(--font-cond);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 0.6rem;
 }
 
 .post-meta {
