@@ -1,127 +1,313 @@
 // ── WARFRAME WEEKLY · app.js ─────────────────────────
+// All rotation data ported from config.json
+// Prices fetched live from Warframe Market API v2
 
-const STORAGE_KEY = 'warframeWeekly_entries';
+// ── START DATES ──────────────────────────────────────
+const START_DATES = {
+  teshin:      new Date("2025-01-06T00:00:00+00:00"),
+  incarnon:    new Date("2025-02-03T00:00:00+00:00"),
+  circuit:     new Date("2025-01-06T00:00:00+00:00"),
+  bird:        new Date("2025-01-20T00:00:00+00:00"),
+  archon:      new Date("2025-01-06T00:00:00+00:00"),
+};
 
-const SECTIONS = [
-  { id: 'steelpath',    gridId: 'steelpath-grid',    label: "Teshin's Steelpath Shop" },
-  { id: 'incarnons',   gridId: 'incarnons-grid',    label: 'Circuit Incarnons' },
-  { id: 'warframes',   gridId: 'warframes-grid',    label: 'Circuit Warframes' },
-  { id: 'archon-shard',gridId: 'archon-shard-grid', label: 'Bird 3 Archon Shard' },
-  { id: 'archon-hunt', gridId: 'archon-hunt-grid',  label: 'Archon Hunt' },
-  { id: 'expensive',   gridId: 'expensive-grid',    label: 'Expensive Warframe Sets' },
-  { id: 'cheapest',    gridId: 'cheapest-grid',     label: 'Cheapest Warframe Sets' },
+// ── ROTATION DATA ────────────────────────────────────
+const TESHIN_DATA = {
+  1: { items: ["Umbra Forma Blueprint"] },
+  2: { items: ["50,000 Kuva"] },
+  3: { items: ["Kitgun Riven Mod"] },
+  4: { items: ["3 × Forma"] },
+  5: { items: ["Zaw Riven Mod"] },
+  6: { items: ["30,000 Endo"] },
+  7: { items: ["Rifle Riven Mod"] },
+  8: { items: ["Shotgun Riven Mod"] },
+};
+
+const INCARNON_DATA = {
+  1: { items: ["Braton", "Lato", "Skana", "Paris", "Kunai"] },
+  2: { items: ["Boar", "Gammacor", "Angstrum", "Gorgon", "Anku"] },
+  3: { items: ["Bo", "Latron", "Furis", "Furax", "Strun"] },
+  4: { items: ["Lex", "Magistar", "Boltor", "Bronco", "Ceramic Dagger"] },
+  5: { items: ["Torid", "Dual Toxocyst", "Dual Ichor", "Miter", "Atomos"] },
+  6: { items: ["Ack & Brunt", "Soma", "Vasto", "Nami Solo", "Burston"] },
+  7: { items: ["Zylok", "Sibear", "Dread", "Despair", "Hate"] },
+  8: { items: ["Dera", "Sybaris", "Cestra", "Sicarus", "Okina"] },
+};
+
+const CIRCUIT_DATA = {
+  1:  { items: ["Excalibur", "Trinity", "Ember"] },
+  2:  { items: ["Loki", "Mag", "Rhino"] },
+  3:  { items: ["Ash", "Frost", "Nyx"] },
+  4:  { items: ["Saryn", "Vauban", "Nova"] },
+  5:  { items: ["Nekros", "Valkyr", "Oberon"] },
+  6:  { items: ["Hydroid", "Mirage", "Limbo"] },
+  7:  { items: ["Mesa", "Chroma", "Atlas"] },
+  8:  { items: ["Ivara", "Inaros", "Titania"] },
+  9:  { items: ["Nidus", "Octavia", "Harrow"] },
+  10: { items: ["Gara", "Khora", "Revenant"] },
+  11: { items: ["Garuda", "Baruuk", "Hildryn"] },
+};
+
+const BIRD_DATA = {
+  1: { items: ["Azure Archon Shard"],   color: "#4fc3f7", emoji: "🔵" },
+  2: { items: ["Amber Archon Shard"],   color: "#ffb300", emoji: "🟡" },
+  3: { items: ["Crimson Archon Shard"], color: "#ef5350", emoji: "🔴" },
+};
+
+const ARCHON_DATA = {
+  1: { items: ["Archon Amar"],   shard: "Crimson", color: "#ef5350", emoji: "🔴" },
+  2: { items: ["Archon Nira"],   shard: "Amber",   color: "#ffb300", emoji: "🟡" },
+  3: { items: ["Archon Boreal"], shard: "Azure",   color: "#4fc3f7", emoji: "🔵" },
+};
+
+// ── WARFRAME MARKET SETS ─────────────────────────────
+const WARFRAME_SETS = [
+  "excalibur","frost","mag","ember","rhino","loki","nyx","nova","volt","ash",
+  "trinity","saryn","vauban","nekros","valkyr","banshee","oberon","hydroid",
+  "mirage","zephyr","limbo","chroma","mesa","equinox","wukong","atlas","ivara",
+  "titania","inaros","nezha","octavia","gara","nidus","harrow","garuda","khora",
+  "revenant","baruuk","hildryn","wisp","grendel","gauss","protea","sevagoth",
+  "xaku","lavos","yareli","caliban","gyre","voruna","styanax","citrine","kullervo"
 ];
 
-function getWeekNumber() {
+const API = "https://api.warframe.market/v2";
+
+// ── HELPERS ──────────────────────────────────────────
+function getCurrentWeek(startDate, cycleLength) {
   const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  return Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
-}
-
-function loadEntries() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch { return {}; }
-}
-
-function saveEntries(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const daysSince = (now - startDate) / (1000 * 60 * 60 * 24);
+  return (Math.floor(daysSince / 7) % cycleLength) + 1;
 }
 
 function escapeHTML(str) {
   return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-let data = loadEntries();
+function setLoading(id, msg = "Loading...") {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = `<div class="loading-state">${msg}</div>`;
+}
 
-// ── Render all sections ──────────────────────────────
-function renderAll() {
-  SECTIONS.forEach(sec => {
-    const grid = document.getElementById(sec.gridId);
-    if (!grid) return;
-    const items = data[sec.id] || [];
-
-    if (items.length === 0) {
-      grid.innerHTML = `<div class="empty-state">No entries yet — hit + to add this week's info.</div>`;
-      return;
-    }
-
-    grid.innerHTML = items.map(item => `
-      <div class="post-card">
-        <h3 class="post-title">${escapeHTML(item.title)}</h3>
-        ${item.price ? `<div class="price-tag">◈ ${escapeHTML(item.price)} pt</div>` : ''}
-        ${item.notes ? `<p class="post-body">${escapeHTML(item.notes)}</p>` : ''}
-        <div class="post-meta">
-          <span class="post-week">WEEK ${item.week}</span>
-          <button class="delete-btn" data-section="${sec.id}" data-id="${item.id}">✕</button>
-        </div>
+// ── RENDER: TESHIN ────────────────────────────────────
+function renderTeshin() {
+  const week = getCurrentWeek(START_DATES.teshin, 8);
+  const data = TESHIN_DATA[week];
+  const grid = document.getElementById("steelpath-grid");
+  grid.innerHTML = `
+    <div class="post-card featured">
+      <div class="week-badge">WEEK ${week} OF 8</div>
+      <h3 class="post-title">${escapeHTML(data.items[0])}</h3>
+      <p class="post-body">This week's rotating offering from Teshin's Steel Path Honors shop.</p>
+      <div class="rotation-bar">
+        ${Object.entries(TESHIN_DATA).map(([w, d]) =>
+          `<div class="rot-pip ${+w === week ? 'active' : ''}" title="Week ${w}: ${d.items[0]}"></div>`
+        ).join('')}
       </div>
-    `).join('');
+    </div>
+    <div class="cycle-list">
+      <h4 class="cycle-title">Full 8-Week Cycle</h4>
+      ${Object.entries(TESHIN_DATA).map(([w, d]) => `
+        <div class="cycle-row ${+w === week ? 'current' : ''}">
+          <span class="cycle-week">Wk ${w}</span>
+          <span class="cycle-item">${+w === week ? '▶ ' : ''}${escapeHTML(d.items[0])}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 
-    grid.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const sid = btn.dataset.section;
-        const id  = Number(btn.dataset.id);
-        data[sid] = (data[sid] || []).filter(e => e.id !== id);
-        saveEntries(data);
-        renderAll();
-      });
+// ── RENDER: INCARNONS ────────────────────────────────
+function renderIncarnons() {
+  const week = getCurrentWeek(START_DATES.incarnon, 8);
+  const data = INCARNON_DATA[week];
+  const grid = document.getElementById("incarnons-grid");
+  grid.innerHTML = `
+    <div class="post-card featured">
+      <div class="week-badge">WEEK ${week} OF 8</div>
+      <h3 class="post-title">This Week's Incarnons</h3>
+      <div class="item-pills">
+        ${data.items.map(i => `<span class="item-pill">${escapeHTML(i)}</span>`).join('')}
+      </div>
+      <div class="rotation-bar">
+        ${Object.entries(INCARNON_DATA).map(([w]) =>
+          `<div class="rot-pip ${+w === week ? 'active' : ''}"></div>`
+        ).join('')}
+      </div>
+    </div>
+    <div class="cycle-list">
+      <h4 class="cycle-title">Full 8-Week Cycle</h4>
+      ${Object.entries(INCARNON_DATA).map(([w, d]) => `
+        <div class="cycle-row ${+w === week ? 'current' : ''}">
+          <span class="cycle-week">Wk ${w}</span>
+          <span class="cycle-item">${+w === week ? '▶ ' : ''}${d.items.join(', ')}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── RENDER: CIRCUIT WARFRAMES ────────────────────────
+function renderCircuit() {
+  const week = getCurrentWeek(START_DATES.circuit, 11);
+  const data = CIRCUIT_DATA[week];
+  const grid = document.getElementById("warframes-grid");
+  grid.innerHTML = `
+    <div class="post-card featured">
+      <div class="week-badge">WEEK ${week} OF 11</div>
+      <h3 class="post-title">This Week's Circuit Warframes</h3>
+      <div class="item-pills">
+        ${data.items.map(i => `<span class="item-pill">${escapeHTML(i)}</span>`).join('')}
+      </div>
+      <div class="rotation-bar">
+        ${Object.entries(CIRCUIT_DATA).map(([w]) =>
+          `<div class="rot-pip ${+w === week ? 'active' : ''}"></div>`
+        ).join('')}
+      </div>
+    </div>
+    <div class="cycle-list">
+      <h4 class="cycle-title">Full 11-Week Cycle</h4>
+      ${Object.entries(CIRCUIT_DATA).map(([w, d]) => `
+        <div class="cycle-row ${+w === week ? 'current' : ''}">
+          <span class="cycle-week">Wk ${w}</span>
+          <span class="cycle-item">${+w === week ? '▶ ' : ''}${d.items.join(', ')}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── RENDER: BIRD ARCHON SHARD ────────────────────────
+function renderBird() {
+  const week = getCurrentWeek(START_DATES.bird, 3);
+  const data = BIRD_DATA[week];
+  const grid = document.getElementById("archon-shard-grid");
+  const isCrimson = week === 3;
+  grid.innerHTML = `
+    <div class="post-card featured ${isCrimson ? 'crimson-alert' : ''}">
+      <div class="week-badge">WEEK ${week} OF 3</div>
+      ${isCrimson ? '<div class="alert-banner">🔴 RARK! RARK! IT\'S RED!</div>' : ''}
+      <h3 class="post-title">${data.emoji} ${escapeHTML(data.items[0])}</h3>
+      <p class="post-body" style="color:${data.color}">This week's Bird 3 Archon Shard color.</p>
+      <div class="rotation-bar">
+        ${[1,2,3].map(w =>
+          `<div class="rot-pip ${w === week ? 'active' : ''}" style="${w === week ? `background:${data.color}` : ''}"></div>`
+        ).join('')}
+      </div>
+    </div>
+    <div class="cycle-list">
+      <h4 class="cycle-title">3-Week Cycle</h4>
+      ${Object.entries(BIRD_DATA).map(([w, d]) => `
+        <div class="cycle-row ${+w === week ? 'current' : ''}">
+          <span class="cycle-week">${d.emoji} Wk ${w}</span>
+          <span class="cycle-item">${+w === week ? '▶ ' : ''}${escapeHTML(d.items[0])}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── RENDER: ARCHON HUNT ──────────────────────────────
+function renderArchonHunt() {
+  const week = getCurrentWeek(START_DATES.archon, 3);
+  const data = ARCHON_DATA[week];
+  const grid = document.getElementById("archon-hunt-grid");
+  const isAmar = week === 1;
+  grid.innerHTML = `
+    <div class="post-card featured ${isAmar ? 'crimson-alert' : ''}">
+      <div class="week-badge">WEEK ${week} OF 3</div>
+      ${isAmar ? '<div class="alert-banner">🔴 RED WEEK — ARCHON AMAR!</div>' : ''}
+      <h3 class="post-title">${data.emoji} ${escapeHTML(data.items[0])}</h3>
+      <p class="post-body">Drops: <span style="color:${data.color}">${data.shard} Archon Shard</span></p>
+      <div class="rotation-bar">
+        ${[1,2,3].map(w =>
+          `<div class="rot-pip ${w === week ? 'active' : ''}"></div>`
+        ).join('')}
+      </div>
+    </div>
+    <div class="cycle-list">
+      <h4 class="cycle-title">3-Week Cycle</h4>
+      ${Object.entries(ARCHON_DATA).map(([w, d]) => `
+        <div class="cycle-row ${+w === week ? 'current' : ''}">
+          <span class="cycle-week">${d.emoji} Wk ${w}</span>
+          <span class="cycle-item">${+w === week ? '▶ ' : ''}${escapeHTML(d.items[0])} → ${d.shard} Shard</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── FETCH PRICE ──────────────────────────────────────
+async function fetchSetPrice(name) {
+  try {
+    const res = await fetch(`${API}/orders/item/${name}_prime_set/top`, {
+      headers: { "Platform": "pc", "Language": "en" }
     });
-  });
+    if (!res.ok) return 0;
+    const json = await res.json();
+    const sells = json?.data?.sell || [];
+    if (!sells.length) return 0;
+    const prices = sells.map(o => o.platinum).filter(Boolean);
+    return prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : 0;
+  } catch { return 0; }
 }
 
-// ── Modal ────────────────────────────────────────────
-const modal     = document.getElementById('modal');
-const addBtn    = document.getElementById('add-btn');
-const saveBtn   = document.getElementById('save-btn');
-const cancelBtn = document.getElementById('cancel-btn');
+// ── RENDER: PRICE SECTIONS ───────────────────────────
+async function renderPriceSections() {
+  setLoading("expensive-grid", "⚙️ Fetching prices from Warframe Market...");
+  setLoading("cheapest-grid",  "⚙️ Fetching prices from Warframe Market...");
 
-addBtn.addEventListener('click', () => modal.classList.add('open'));
-cancelBtn.addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  // Fetch all in parallel
+  const results = await Promise.all(
+    WARFRAME_SETS.map(async name => {
+      const price = await fetchSetPrice(name);
+      const display = name.charAt(0).toUpperCase() + name.slice(1) + " Prime";
+      return { name, display, price };
+    })
+  );
 
-function closeModal() {
-  modal.classList.remove('open');
-  document.getElementById('m-title').value = '';
-  document.getElementById('m-price').value = '';
-  document.getElementById('m-body').value  = '';
+  const valid = results.filter(r => r.price > 0).sort((a, b) => b.price - a.price);
+
+  const top10    = valid.slice(0, 10);
+  const bottom10 = [...valid].sort((a, b) => a.price - b.price).slice(0, 10);
+
+  renderPriceGrid("expensive-grid", top10, "🏆");
+  renderPriceGrid("cheapest-grid",  bottom10, "💸");
 }
 
-saveBtn.addEventListener('click', () => {
-  const section = document.getElementById('m-section').value;
-  const title   = document.getElementById('m-title').value.trim();
-  const price   = document.getElementById('m-price').value.trim();
-  const notes   = document.getElementById('m-body').value.trim();
-
-  if (!title) {
-    document.getElementById('m-title').style.borderColor = '#ff2d55';
-    setTimeout(() => document.getElementById('m-title').style.borderColor = '', 1500);
+function renderPriceGrid(gridId, items, icon) {
+  const grid = document.getElementById(gridId);
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state">Could not load prices. Try refreshing.</div>`;
     return;
   }
+  grid.innerHTML = items.map((item, i) => `
+    <a class="post-card price-card" href="https://warframe.market/items/${item.name}_prime_set" target="_blank" rel="noopener">
+      <div class="price-rank">${icon} #${i + 1}</div>
+      <h3 class="post-title">${escapeHTML(item.display)} Set</h3>
+      <div class="price-tag">◈ ${item.price} pt avg</div>
+      <div class="price-link">View on Warframe.Market →</div>
+    </a>
+  `).join('');
+}
 
-  if (!data[section]) data[section] = [];
-  data[section].push({ id: Date.now(), title, price, notes, week: getWeekNumber() });
-  saveEntries(data);
-  closeModal();
-  renderAll();
-
-  // Scroll to the section
-  document.getElementById(section === 'expensive' ? 'expensive-sets' : section === 'cheapest' ? 'cheapest-sets' : section)
-    ?.scrollIntoView({ behavior: 'smooth' });
+// ── HAMBURGER ────────────────────────────────────────
+document.getElementById("hamburger").addEventListener("click", () => {
+  document.getElementById("main-nav").classList.toggle("open");
+});
+document.querySelectorAll("#main-nav a").forEach(a => {
+  a.addEventListener("click", () => document.getElementById("main-nav").classList.remove("open"));
 });
 
-// ── Hamburger ────────────────────────────────────────
-document.getElementById('hamburger').addEventListener('click', () => {
-  document.getElementById('main-nav').classList.toggle('open');
-});
+// ── INIT ─────────────────────────────────────────────
+document.getElementById("week-num").textContent     = getCurrentWeek(START_DATES.teshin, 8);
+document.getElementById("year").textContent         = new Date().getFullYear();
+document.getElementById("footer-year").textContent  = new Date().getFullYear();
 
-document.querySelectorAll('#main-nav a').forEach(a => {
-  a.addEventListener('click', () => document.getElementById('main-nav').classList.remove('open'));
-});
-
-// ── Init ─────────────────────────────────────────────
-document.getElementById('week-num').textContent  = getWeekNumber();
-document.getElementById('year').textContent      = new Date().getFullYear();
-document.getElementById('footer-year').textContent = new Date().getFullYear();
-renderAll();
+renderTeshin();
+renderIncarnons();
+renderCircuit();
+renderBird();
+renderArchonHunt();
+renderPriceSections();

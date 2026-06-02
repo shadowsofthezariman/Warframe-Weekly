@@ -273,6 +273,143 @@ nav a:hover { color: var(--accent); }
 
 /* card-grid defined above */
 
+/* ── ROTATION CARDS ─────────────────────────────────── */
+.post-card.featured { border-color: rgba(0,255,224,0.2); }
+
+.week-badge {
+  font-family: var(--font-cond);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.alert-banner {
+  background: rgba(239,83,80,0.15);
+  border: 1px solid #ef5350;
+  color: #ef5350;
+  font-family: var(--font-cond);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+.crimson-alert { border-color: rgba(239,83,80,0.4) !important; }
+
+.item-pills {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.item-pill {
+  background: rgba(0,255,224,0.08);
+  border: 1px solid rgba(0,255,224,0.25);
+  color: var(--accent);
+  font-family: var(--font-cond);
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  padding: 0.3rem 0.8rem;
+}
+
+.rotation-bar {
+  display: flex; gap: 0.4rem;
+  margin-top: 1.2rem;
+}
+
+.rot-pip {
+  flex: 1; height: 4px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.rot-pip.active { background: var(--accent); }
+
+/* ── CYCLE LIST ─────────────────────────────────────── */
+.cycle-list {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 1.2rem 1.5rem;
+  grid-column: span 1;
+}
+
+@media (min-width: 700px) {
+  .cycle-list { grid-column: span 2; }
+}
+
+.cycle-title {
+  font-family: var(--font-cond);
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.cycle-row {
+  display: flex; gap: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.cycle-row:last-child { border-bottom: none; }
+.cycle-row.current { color: var(--text); }
+
+.cycle-week {
+  font-family: var(--font-cond);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: var(--muted);
+  min-width: 40px;
+}
+.cycle-row.current .cycle-week { color: var(--accent); }
+
+/* ── PRICE CARDS ────────────────────────────────────── */
+.price-card {
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.price-card:hover { transform: translateY(-4px); border-color: rgba(0,255,224,0.3); }
+
+.price-rank {
+  font-family: var(--font-cond);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.price-link {
+  font-family: var(--font-cond);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-top: 0.8rem;
+  transition: color 0.2s;
+}
+.price-card:hover .price-link { color: var(--accent); }
+
+/* ── LOADING STATE ──────────────────────────────────── */
+.loading-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted);
+  font-family: var(--font-cond);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .post-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
