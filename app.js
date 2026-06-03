@@ -124,11 +124,14 @@ function renderIncarnons() {
           </div>
         `).join('')}
       </div>
+      <p class="post-body">Every week in the Steel Path Circuit, players can select two Incarnon Genesis Adapters as the Tier 5 and 10 rewards.</p>
       <div class="rotation-bar">
         ${Object.entries(INCARNON_DATA).map(([w]) =>
           `<div class="rot-pip ${+w === week ? 'active' : ''}"></div>`
         ).join('')}
       </div>
+      
+    </div>
     </div>
     <div class="cycle-list">
       <h4 class="cycle-title">Full 8-Week Cycle</h4>
@@ -159,11 +162,20 @@ function renderCircuit() {
           </div>
         `).join('')}
       </div>
+      <p class="post-body">Every week in the Circuit,
+players can choose to earn the blueprints of a Warframe. 
+The Main Blueprint is at Tier 10. 
+The others are:
+Tier 2 Neuroptics,
+Tier 5 Chassis, 
+Tier 7 Augment Mod, 
+Tier 8 Systems.</p>
       <div class="rotation-bar">
         ${Object.entries(CIRCUIT_DATA).map(([w]) =>
           `<div class="rot-pip ${+w === week ? 'active' : ''}"></div>`
         ).join('')}
       </div>
+
     </div>
     <div class="cycle-list">
       <h4 class="cycle-title">Full 11-Week Cycle</h4>
