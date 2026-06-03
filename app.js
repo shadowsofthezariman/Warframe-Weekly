@@ -13,51 +13,51 @@ const START_DATES = {
 
 // ── ROTATION DATA ────────────────────────────────────
 const TESHIN_DATA = {
-  1: { items: ["Umbra Forma Blueprint"] },
-  2: { items: ["50,000 Kuva"] },
-  3: { items: ["Kitgun Riven Mod"] },
-  4: { items: ["3 × Forma"] },
-  5: { items: ["Zaw Riven Mod"] },
-  6: { items: ["30,000 Endo"] },
-  7: { items: ["Rifle Riven Mod"] },
-  8: { items: ["Shotgun Riven Mod"] },
+  1: { items: ["Umbra Forma Blueprint"],  img: "images/Teshin's Rotating Items/UmbraForma.png" },
+  2: { items: ["50,000 Kuva"],            img: "images/Teshin's Rotating Items/Kuva.png" },
+  3: { items: ["Kitgun Riven Mod"],       img: "images/Teshin's Rotating Items/RivenModTemplate.png" },
+  4: { items: ["3 × Forma"],             img: "images/Teshin's Rotating Items/Forma.png" },
+  5: { items: ["Zaw Riven Mod"],          img: "images/Teshin's Rotating Items/RivenModTemplate.png" },
+  6: { items: ["30,000 Endo"],            img: "images/Teshin's Rotating Items/Endo.png" },
+  7: { items: ["Rifle Riven Mod"],        img: "images/Teshin's Rotating Items/RivenModTemplate.png" },
+  8: { items: ["Shotgun Riven Mod"],      img: "images/Teshin's Rotating Items/RivenModTemplate.png" },
 };
 
 const INCARNON_DATA = {
-  1: { items: ["Braton", "Lato", "Skana", "Paris", "Kunai"] },
-  2: { items: ["Boar", "Gammacor", "Angstrum", "Gorgon", "Anku"] },
-  3: { items: ["Bo", "Latron", "Furis", "Furax", "Strun"] },
-  4: { items: ["Lex", "Magistar", "Boltor", "Bronco", "Ceramic Dagger"] },
-  5: { items: ["Torid", "Dual Toxocyst", "Dual Ichor", "Miter", "Atomos"] },
-  6: { items: ["Ack & Brunt", "Soma", "Vasto", "Nami Solo", "Burston"] },
-  7: { items: ["Zylok", "Sibear", "Dread", "Despair", "Hate"] },
-  8: { items: ["Dera", "Sybaris", "Cestra", "Sicarus", "Okina"] },
+  1: { items: ["Braton", "Lato", "Skana", "Paris", "Kunai"], imgs: ["images/Incarnon Genesis Weapons/BratonIncarnon.png", "images/Incarnon Genesis Weapons/LatoIncarnon.png", "images/Incarnon Genesis Weapons/SkanaIncarnon.png", "images/Incarnon Genesis Weapons/ParisIncarnon.png", "images/Incarnon Genesis Weapons/KunaiIncarnon.png"] },
+  2: { items: ["Boar", "Gammacor", "Angstrum", "Gorgon", "Anku"], imgs: ["images/Incarnon Genesis Weapons/BoarIncarnon.png", "images/Incarnon Genesis Weapons/GammacorIncarnon.png", "images/Incarnon Genesis Weapons/AngstrumIncarnon.png", "images/Incarnon Genesis Weapons/GorgonIncarnon.png", "images/Incarnon Genesis Weapons/AnkuIncarnon.png"] },
+  3: { items: ["Bo", "Latron", "Furis", "Furax", "Strun"], imgs: ["images/Incarnon Genesis Weapons/BoIncarnon.png", "images/Incarnon Genesis Weapons/LatronIncarnon.png", "images/Incarnon Genesis Weapons/FurisIncarnon.png", "images/Incarnon Genesis Weapons/FuraxIncarnon.png", "images/Incarnon Genesis Weapons/StrunIncarnon.png"] },
+  4: { items: ["Lex", "Magistar", "Boltor", "Bronco", "Ceramic Dagger"], imgs: ["images/Incarnon Genesis Weapons/LexIncarnon.png", "images/Incarnon Genesis Weapons/MagistarIncarnon.png", "images/Incarnon Genesis Weapons/BoltorIncarnon.png", "images/Incarnon Genesis Weapons/BroncoIncarnon.png", "images/Incarnon Genesis Weapons/CeramicDaggerIncarnon.png"] },
+  5: { items: ["Torid", "Dual Toxocyst", "Dual Ichor", "Miter", "Atomos"], imgs: ["images/Incarnon Genesis Weapons/ToridIncarnon.png", "images/Incarnon Genesis Weapons/DualToxocystIncarnon.png", "images/Incarnon Genesis Weapons/DualIchorIncarnon.png", "images/Incarnon Genesis Weapons/MiterIncarnon.png", "images/Incarnon Genesis Weapons/AtomosIncarnon.png"] },
+  6: { items: ["Ack & Brunt", "Soma", "Vasto", "Nami Solo", "Burston"], imgs: ["images/Incarnon Genesis Weapons/Ack_BruntIncarnon.png", "images/Incarnon Genesis Weapons/SomaIncarnon.png", "images/Incarnon Genesis Weapons/VastoIncarnon.png", "images/Incarnon Genesis Weapons/NamiSoloIncarnon.png", "images/Incarnon Genesis Weapons/BurstonIncarnon.png"] },
+  7: { items: ["Zylok", "Sibear", "Dread", "Despair", "Hate"], imgs: ["images/Incarnon Genesis Weapons/ZylokIncarnon.png", "images/Incarnon Genesis Weapons/SibearIncarnon.png", "images/Incarnon Genesis Weapons/DreadIncarnon.png", "images/Incarnon Genesis Weapons/DespairIncarnon.png", "images/Incarnon Genesis Weapons/HateIncarnon.png"] },
+  8: { items: ["Dera", "Sybaris", "Cestra", "Sicarus", "Okina"], imgs: ["images/Incarnon Genesis Weapons/DeraIncarnon.png", "images/Incarnon Genesis Weapons/SybarisIncarnon.png", "images/Incarnon Genesis Weapons/CestraIncarnon.png", "images/Incarnon Genesis Weapons/SicarusIncarnon.png", "images/Incarnon Genesis Weapons/OkinaIncarnon.png"] },
 };
 
 const CIRCUIT_DATA = {
-  1:  { items: ["Excalibur", "Trinity", "Ember"] },
-  2:  { items: ["Loki", "Mag", "Rhino"] },
-  3:  { items: ["Ash", "Frost", "Nyx"] },
-  4:  { items: ["Saryn", "Vauban", "Nova"] },
-  5:  { items: ["Nekros", "Valkyr", "Oberon"] },
-  6:  { items: ["Hydroid", "Mirage", "Limbo"] },
-  7:  { items: ["Mesa", "Chroma", "Atlas"] },
-  8:  { items: ["Ivara", "Inaros", "Titania"] },
-  9:  { items: ["Nidus", "Octavia", "Harrow"] },
-  10: { items: ["Gara", "Khora", "Revenant"] },
-  11: { items: ["Garuda", "Baruuk", "Hildryn"] },
+  1:  { items: ["Excalibur", "Trinity", "Ember"],    imgs: ["images/Warframes/Excalibur.png", "images/Warframes/Trinity.png", "images/Warframes/Ember.png"] },
+  2:  { items: ["Loki", "Mag", "Rhino"],             imgs: ["images/Warframes/Loki.png", "images/Warframes/Mag.png", "images/Warframes/Rhino.png"] },
+  3:  { items: ["Ash", "Frost", "Nyx"],              imgs: ["images/Warframes/Ash.png", "images/Warframes/Frost.png", "images/Warframes/Nyx.png"] },
+  4:  { items: ["Saryn", "Vauban", "Nova"],          imgs: ["images/Warframes/Saryn.png", "images/Warframes/Vauban.png", "images/Warframes/Nova.png"] },
+  5:  { items: ["Nekros", "Valkyr", "Oberon"],       imgs: ["images/Warframes/Nekros.png", "images/Warframes/Valkyr.png", "images/Warframes/Oberon.png"] },
+  6:  { items: ["Hydroid", "Mirage", "Limbo"],       imgs: ["images/Warframes/Hydroid.png", "images/Warframes/Mirage.png", "images/Warframes/Limbo.png"] },
+  7:  { items: ["Mesa", "Chroma", "Atlas"],          imgs: ["images/Warframes/Mesa.png", "images/Warframes/Chroma.png", "images/Warframes/Atlas.png"] },
+  8:  { items: ["Ivara", "Inaros", "Titania"],       imgs: ["images/Warframes/Ivara.png", "images/Warframes/Inaros.png", "images/Warframes/Titania.png"] },
+  9:  { items: ["Nidus", "Octavia", "Harrow"],       imgs: ["images/Warframes/Nidus.png", "images/Warframes/Octavia.png", "images/Warframes/Harrow.png"] },
+  10: { items: ["Gara", "Khora", "Revenant"],        imgs: ["images/Warframes/Gara.png", "images/Warframes/Khora.png", "images/Warframes/Revenant.png"] },
+  11: { items: ["Garuda", "Baruuk", "Hildryn"],      imgs: ["images/Warframes/Garuda.png", "images/Warframes/Baruuk.png", "images/Warframes/Hildryn.png"] },
 };
 
 const BIRD_DATA = {
-  1: { items: ["Azure Archon Shard"],   color: "#4fc3f7", emoji: "🔵" },
-  2: { items: ["Amber Archon Shard"],   color: "#ffb300", emoji: "🟡" },
-  3: { items: ["Crimson Archon Shard"], color: "#ef5350", emoji: "🔴" },
+  1: { items: ["Azure Archon Shard"],   color: "#4fc3f7", emoji: "🔵", img: "images/ArchonShards/AzureArchonShard.png" },
+  2: { items: ["Amber Archon Shard"],   color: "#ffb300", emoji: "🟡", img: "images/ArchonShards/AmberArchonShard.png" },
+  3: { items: ["Crimson Archon Shard"], color: "#ef5350", emoji: "🔴", img: "images/ArchonShards/CrimsonArchonShard.png" },
 };
 
 const ARCHON_DATA = {
-  1: { items: ["Archon Amar"],   shard: "Crimson", color: "#ef5350", emoji: "🔴" },
-  2: { items: ["Archon Nira"],   shard: "Amber",   color: "#ffb300", emoji: "🟡" },
-  3: { items: ["Archon Boreal"], shard: "Azure",   color: "#4fc3f7", emoji: "🔵" },
+  1: { items: ["Archon Amar"],   shard: "Crimson", color: "#ef5350", emoji: "🔴", img: "images/Archons/ArchonAmar.png",   shardImg: "images/ArchonShards/CrimsonArchonShard.png" },
+  2: { items: ["Archon Nira"],   shard: "Amber",   color: "#ffb300", emoji: "🟡", img: "images/Archons/ArchonNira.png",   shardImg: "images/ArchonShards/AmberArchonShard.png" },
+  3: { items: ["Archon Boreal"], shard: "Azure",   color: "#4fc3f7", emoji: "🔵", img: "images/Archons/ArchonBoreal.png", shardImg: "images/ArchonShards/AzureArchonShard.png" },
 };
 
 // ── HAMBURGER ────────────────────────────────────────
@@ -86,6 +86,7 @@ function renderTeshin() {
   grid.innerHTML = `
     <div class="post-card featured">
       <div class="week-badge">WEEK ${week} OF 8</div>
+      ${data.img ? `<img class="item-img" src="${data.img}" alt="${escapeHTML(data.items[0])}" />` : ''}
       <h3 class="post-title">${escapeHTML(data.items[0])}</h3>
       <p class="post-body">This week's rotating offering from Teshin's Steel Path Honors shop.</p>
       <div class="rotation-bar">
@@ -115,8 +116,13 @@ function renderIncarnons() {
     <div class="post-card featured">
       <div class="week-badge">WEEK ${week} OF 8</div>
       <h3 class="post-title">This Week's Incarnons</h3>
-      <div class="item-pills">
-        ${data.items.map(i => `<span class="item-pill">${escapeHTML(i)}</span>`).join('')}
+      <div class="item-img-row">
+        ${data.items.map((item, i) => `
+          <div class="item-img-cell">
+            <img class="item-img item-img-sm" src="${data.imgs[i]}" alt="${escapeHTML(item)}" />
+            <span class="item-img-label">${escapeHTML(item)}</span>
+          </div>
+        `).join('')}
       </div>
       <div class="rotation-bar">
         ${Object.entries(INCARNON_DATA).map(([w]) =>
@@ -145,8 +151,13 @@ function renderCircuit() {
     <div class="post-card featured">
       <div class="week-badge">WEEK ${week} OF 11</div>
       <h3 class="post-title">This Week's Circuit Warframes</h3>
-      <div class="item-pills">
-        ${data.items.map(i => `<span class="item-pill">${escapeHTML(i)}</span>`).join('')}
+      <div class="item-img-row">
+        ${data.items.map((item, i) => `
+          <div class="item-img-cell">
+            <img class="item-img item-img-sm" src="${data.imgs[i]}" alt="${escapeHTML(item)}" />
+            <span class="item-img-label">${escapeHTML(item)}</span>
+          </div>
+        `).join('')}
       </div>
       <div class="rotation-bar">
         ${Object.entries(CIRCUIT_DATA).map(([w]) =>
@@ -176,6 +187,7 @@ function renderBird() {
     <div class="post-card featured ${isCrimson ? 'crimson-alert' : ''}">
       <div class="week-badge">WEEK ${week} OF 3</div>
       ${isCrimson ? '<div class="alert-banner">🔴 RARK! RARK! IT\'S RED!</div>' : ''}
+      <img class="item-img" src="${data.img}" alt="${escapeHTML(data.items[0])}" />
       <h3 class="post-title">${data.emoji} ${escapeHTML(data.items[0])}</h3>
       <p class="post-body" style="color:${data.color}">This week's Bird 3 Archon Shard color.</p>
       <div class="rotation-bar">
@@ -206,8 +218,16 @@ function renderArchonHunt() {
     <div class="post-card featured ${isAmar ? 'crimson-alert' : ''}">
       <div class="week-badge">WEEK ${week} OF 3</div>
       ${isAmar ? '<div class="alert-banner">🔴 RED WEEK — ARCHON AMAR!</div>' : ''}
-      <h3 class="post-title">${data.emoji} ${escapeHTML(data.items[0])}</h3>
-      <p class="post-body">Drops: <span style="color:${data.color}">${data.shard} Archon Shard</span></p>
+      <div class="item-img-row">
+        <div class="item-img-cell">
+          <img class="item-img item-img-sm" src="${data.img}" alt="${escapeHTML(data.items[0])}" />
+          <span class="item-img-label">${escapeHTML(data.items[0])}</span>
+        </div>
+        <div class="item-img-cell">
+          <img class="item-img item-img-sm" src="${data.shardImg}" alt="${data.shard} Archon Shard" />
+          <span class="item-img-label" style="color:${data.color}">${data.shard} Shard</span>
+        </div>
+      </div>
       <div class="rotation-bar">
         ${[1,2,3].map(w =>
           `<div class="rot-pip ${w === week ? 'active' : ''}"></div>`
