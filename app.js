@@ -60,19 +60,7 @@ const ARCHON_DATA = {
   3: { items: ["Archon Boreal"], shard: "Azure",   color: "#4fc3f7", emoji: "🔵" },
 };
 
-// ── WARFRAME MARKET SETS ─────────────────────────────
-const WARFRAME_SETS = [
-  "excalibur","frost","mag","ember","rhino","loki","nyx","nova","volt","ash",
-  "trinity","saryn","vauban","nekros","valkyr","banshee","oberon","hydroid",
-  "mirage","zephyr","limbo","chroma","mesa","equinox","wukong","atlas","ivara",
-  "titania","inaros","nezha","octavia","gara","nidus","harrow","garuda","khora",
-  "revenant","baruuk","hildryn","wisp","grendel","gauss","protea","sevagoth",
-  "xaku","lavos","yareli","caliban","gyre","voruna","styanax","citrine","kullervo"
-];
-
-const API = "https://api.warframe.market/v2";
-
-// ── HELPERS ──────────────────────────────────────────
+// ── HAMBURGER ────────────────────────────────────────
 function getCurrentWeek(startDate, cycleLength) {
   const now = new Date();
   const daysSince = (now - startDate) / (1000 * 60 * 60 * 24);
@@ -238,60 +226,6 @@ function renderArchonHunt() {
   `;
 }
 
-// ── FETCH PRICE ──────────────────────────────────────
-async function fetchSetPrice(name) {
-  try {
-    const res = await fetch(`${API}/orders/item/${name}_prime_set/top`, {
-      headers: { "Platform": "pc", "Language": "en" }
-    });
-    if (!res.ok) return 0;
-    const json = await res.json();
-    const sells = json?.data?.sell || [];
-    if (!sells.length) return 0;
-    const prices = sells.map(o => o.platinum).filter(Boolean);
-    return prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : 0;
-  } catch { return 0; }
-}
-
-// ── RENDER: PRICE SECTIONS ───────────────────────────
-async function renderPriceSections() {
-  setLoading("expensive-grid", "⚙️ Fetching prices from Warframe Market...");
-  setLoading("cheapest-grid",  "⚙️ Fetching prices from Warframe Market...");
-
-  // Fetch all in parallel
-  const results = await Promise.all(
-    WARFRAME_SETS.map(async name => {
-      const price = await fetchSetPrice(name);
-      const display = name.charAt(0).toUpperCase() + name.slice(1) + " Prime";
-      return { name, display, price };
-    })
-  );
-
-  const valid = results.filter(r => r.price > 0).sort((a, b) => b.price - a.price);
-
-  const top10    = valid.slice(0, 10);
-  const bottom10 = [...valid].sort((a, b) => a.price - b.price).slice(0, 10);
-
-  renderPriceGrid("expensive-grid", top10, "🏆");
-  renderPriceGrid("cheapest-grid",  bottom10, "💸");
-}
-
-function renderPriceGrid(gridId, items, icon) {
-  const grid = document.getElementById(gridId);
-  if (!items.length) {
-    grid.innerHTML = `<div class="empty-state">Could not load prices. Try refreshing.</div>`;
-    return;
-  }
-  grid.innerHTML = items.map((item, i) => `
-    <a class="post-card price-card" href="https://warframe.market/items/${item.name}_prime_set" target="_blank" rel="noopener">
-      <div class="price-rank">${icon} #${i + 1}</div>
-      <h3 class="post-title">${escapeHTML(item.display)} Set</h3>
-      <div class="price-tag">◈ ${item.price} pt avg</div>
-      <div class="price-link">View on Warframe.Market →</div>
-    </a>
-  `).join('');
-}
-
 // ── HAMBURGER ────────────────────────────────────────
 document.getElementById("hamburger").addEventListener("click", () => {
   document.getElementById("main-nav").classList.toggle("open");
@@ -310,4 +244,3 @@ renderIncarnons();
 renderCircuit();
 renderBird();
 renderArchonHunt();
-renderPriceSections();
